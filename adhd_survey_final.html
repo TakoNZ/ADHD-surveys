@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>グレーゾーンのリアルを教えてください</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --ink-light: #4a4a6a;
+    --paper: #f8f6f1;
+    --paper-warm: #f0ede4;
+    --accent: #2d5fa3;
+    --accent-light: #d6e4f7;
+    --green: #1a7a4a;
+    --green-light: #d6f0e3;
+    --orange: #c96a1a;
+    --orange-light: #fde8d5;
+    --border: #d4cfc4;
+    --shadow: 0 2px 24px rgba(26,26,46,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  /* ── ヘッダー ── */
+  .hero {
+    background: var(--ink);
+    color: #fff;
+    padding: 64px 24px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(45,95,163,0.3) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(26,122,74,0.2) 0%, transparent 50%);
+  }
+  .hero-inner { position: relative; max-width: 680px; margin: 0 auto; }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.72);
+    max-width: 520px;
+    margin: 0 auto 28px;
+    line-height: 1.8;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+  .meta-item span { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  /* ── メインコンテンツ ── */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .intro-box {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    padding: 20px 24px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 48px;
+    font-size: 14px;
+    color: var(--ink-light);
+    line-height: 1.8;
+  }
+  .intro-box strong { color: var(--accent); }
+
+  /* ── セクション ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    margin-top: 52px;
+  }
+  .section-num {
+    width: 32px; height: 32px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+  }
+  .section-desc {
+    font-size: 12px;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* ── 質問カード ── */
+  .q-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s;
+  }
+  .q-card:focus-within {
+    box-shadow: 0 4px 32px rgba(45,95,163,0.12);
+    border-color: var(--accent);
+  }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .q-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    padding-top: 3px;
+    flex-shrink: 0;
+    width: 28px;
+  }
+  .q-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.65;
+    flex: 1;
+  }
+  .q-required {
+    display: inline-block;
+    font-size: 10px;
+    background: #fff0f0;
+    color: #c0392b;
+    border: 1px solid #fcc;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-weight: 600;
+  }
+  .q-optional {
+    display: inline-block;
+    font-size: 10px;
+    background: var(--paper-warm);
+    color: #999;
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .q-hint {
+    font-size: 12px;
+    color: var(--orange);
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: var(--orange-light);
+    border-radius: 6px;
+    line-height: 1.6;
+  }
+
+  /* ── 選択肢 ── */
+  .options { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+
+  .option-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--paper);
+  }
+  .option-label:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .option-label input[type="radio"],
+  .option-label input[type="checkbox"] {
+    margin-top: 2px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    width: 16px; height: 16px;
+  }
+  .option-label input:checked + .option-text {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .option-label:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .option-text { font-size: 14px; color: var(--ink-light); line-height: 1.6; }
+
+  /* ── テキストエリア・インプット ── */
+  textarea, input[type="email"], input[type="text"] {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--paper);
+    resize: vertical;
+    transition: border-color 0.15s;
+    outline: none;
+    line-height: 1.7;
+  }
+  textarea:focus, input[type="email"]:focus, input[type="text"]:focus {
+    border-color: var(--accent);
+    background: #fff;
+  }
+  textarea { min-height: 100px; }
+
+  /* ── 特別カード（重要質問） ── */
+  .q-card.highlight {
+    border-color: var(--green);
+    background: linear-gradient(135deg, #fff 0%, var(--green-light) 100%);
+  }
+  .q-card.highlight .q-num { color: var(--green); }
+
+  /* ── インタビュー誘導 ── */
+  .interview-box {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 12px;
+    padding: 32px 28px;
+    margin-top: 48px;
+    margin-bottom: 20px;
+  }
+  .interview-box h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .interview-box p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .interview-options { display: flex; flex-direction: column; gap: 8px; }
+  .interview-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+  }
+  .interview-option:hover { background: rgba(255,255,255,0.08); }
+  .interview-option:has(input:checked) { background: rgba(45,95,163,0.3); border-color: #6fa3d8; }
+  .interview-option input { accent-color: #6fa3d8; }
+
+  .contact-input-wrap {
+    margin-top: 12px;
+    display: none;
+  }
+  .contact-input-wrap.visible { display: block; }
+  .contact-input-wrap input {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+  .contact-input-wrap input::placeholder { color: rgba(255,255,255,0.35); }
+  .contact-input-wrap input:focus { border-color: #6fa3d8; background: rgba(255,255,255,0.12); }
+  .contact-input-wrap label { font-size: 12px; color: rgba(255,255,255,0.5); display: block; margin-bottom: 6px; }
+
+  /* ── 送信ボタン ── */
+  .submit-wrap { text-align: center; margin-top: 40px; }
+  .submit-btn {
+    display: inline-block;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 16px 56px;
+    border-radius: 40px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(26,26,46,0.2);
+  }
+  .submit-btn:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(45,95,163,0.3);
+  }
+  .submit-note {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 14px;
+  }
+
+  /* ── サンクスページ ── */
+  .thanks {
+    display: none;
+    text-align: center;
+    padding: 80px 24px;
+  }
+  .thanks.visible { display: block; }
+  .thanks-icon { font-size: 56px; margin-bottom: 24px; }
+  .thanks h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .thanks p { font-size: 15px; color: var(--ink-light); line-height: 1.9; max-width: 480px; margin: 0 auto; }
+
+  /* ── 進捗バー ── */
+  .progress-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-text { font-size: 12px; color: #aaa; white-space: nowrap; }
+
+  /* ── フッター ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+    padding: 24px;
+    font-size: 11px;
+  }
+
+  @media (max-width: 540px) {
+    .q-card { padding: 20px 18px; }
+    .hero { padding: 48px 20px 40px; }
+    .container { padding: 32px 16px 64px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 進捗バー -->
+<div class="progress-bar">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-text" id="progressText">0 / 10</div>
+</div>
+
+<!-- ヒーロー -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="tag">ADHD グレーゾーン　当事者アンケート</div>
+    <h1>「グレーゾーン」のリアルを<br>教えてください。</h1>
+    <p>診断を受けていないけれど、日常のどこかで「またやってしまった」がある。そんな声を集めています。あなたの体験が、同じ状況にいる人たちの地図になります。</p>
+    <div class="meta-row">
+      <div class="meta-item">⏱ 所要時間<span>約3分</span></div>
+      <div class="meta-item">🔒 匿名回答<span>可能</span></div>
+      <div class="meta-item">📩 セールス<span>一切なし</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- メインフォーム -->
+<div class="container">
+
+  <div class="intro-box">
+    このアンケートは、ADHDのグレーゾーンにいる方のリアルな体験を知るために実施しています。<br>
+    <strong>いただいた声は、当事者のための新しい仕組みづくりの参考にのみ使用します。</strong><br>
+    最後に「詳しく話してもいい」という方には、30分のオンライン対話をお願いする場合があります（任意・謝礼なし）。
+  </div>
+
+  <!-- フォームここから -->
+  <!-- ★ action属性のURLをFormspreeのエンドポイントに変更してください -->
+  <!-- 手順: https://formspree.io でサインアップ → フォーム作成 → エンドポイントURLを取得 -->
+  <form id="surveyForm" action="https://formspree.io/f/xjgpvpwy" method="POST">
+
+    <!-- BLOCK 1 -->
+    <div class="section-label">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-title">あなたの状態について</div>
+        <div class="section-desc">現在の状況を教えてください</div>
+      </div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q1</div>
+        <div class="q-text">
+          あなたのADHD傾向について、現在どの状態に最も近いですか？
+          <span class="q-required">必須</span>
+        </div>
+      </div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q1" value="diagnosed" required><span class="option-text">正式に診断を受けている（ADHD・ASD等）</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="self_aware"><span class="option-text">診断は受けていないが、自分でADHD傾向があると思っている</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="pointed_out"><span class="option-text">医師や周囲から「傾向がある」と指摘されたことがある</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="not_sure"><span class="option-text">はっきりとはわからないが、何か当てはまる気がする</span></label>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q2</div>
+        <div class="q-text">
+          日常で「あ、またやってしまった」と感じる場面はどれですか？
+          <span class="q-required">必須</span>
+          <br><small style="font-weight:300; color:#999;">当てはまるものをすべて選んでください</small>
+        </div>
+      </div>
+      <div class="options">
+        <label class="option-label"><input type="checkbox" name="q2" value="deadline"><span class="option-text">締め切りや約束をギリギリまで放置してしまう</span></label>
+        <label class="option-label"><input type="checkbox" name="q2" value="procrastinate"><span class="option-text">小さなタスクを後回しにして、気づいたら山積みになっている</span></label>
+        <label class="option-label"><input type="checkbox" name="q2" value="motivation"><span class="option-text">やる気が出ないことへの着手が極端に遅い</span></label>
+        <label class="option-label"><input type="checkbox" name="q2" value="distracted"><span class="option-text">集中したいのに気が散る・別のことをしてしまう</span></label>
+        <label class="option-label"><input type="checkbox" name="q2" value="disorganized"><span class="option-text">物や情報を片付けられず、必要なときに見つからない</span></label>
+        <label class="option-label"><input type="checkbox" name="q2" value="emotion"><span class="option-text">感情の波が大きく、些細なことで落ち込んだり爆発したりする</span></label>
+        <label class="option-label"><input type="checkbox" name="q2" value="time"><span class="option-text">時間の感覚が薄く、気づくと予定の時間が来ている</span></label>
+        <label class="option-label"><input type="checkbox" name="q2" value="trouble"><span class="option-text">人に迷惑をかけていると感じることが繰り返される</span></label>
+      </div>
+      <div class="q-hint">「病院に行くほどではないが、確かにある」という小さなことでも選んでください</div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q3</div>
+        <div class="q-text">その困りごとは、あなたの日常にどの程度影響していますか？<span class="q-required">必須</span></div>
+      </div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q3" value="high" required><span class="option-text">かなり影響している（仕事・人間関係・生活に明確な支障がある）</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="medium"><span class="option-text">そこそこ影響している（気になることが週に何度かある）</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="low"><span class="option-text">少し影響している（月に数回、気になる程度）</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="minimal"><span class="option-text">ほぼ影響していない（気になるが実害はほぼない）</span></label>
+      </div>
+    </div>
+
+    <!-- BLOCK 2 -->
+    <div class="section-label">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-title">これまでの行動について</div>
+        <div class="section-desc">解決しようとしたことはありましたか？</div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q4</div>
+        <div class="q-text">これまでに、自分の特性・困りごとを解決しようと何か行動したことはありますか？<span class="q-required">必須</span></div>
+      </div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q4" value="hospital" required><span class="option-text">ある（病院・クリニックを受診した）</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="research"><span class="option-text">ある（本・記事・SNSで情報収集した）</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="app"><span class="option-text">ある（アプリやツールを使ってみた）</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="consult"><span class="option-text">ある（信頼できる人に相談した）</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="wanted_but"><span class="option-text">行動しようとしたが、何をすればいいかわからなかった</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="none"><span class="option-text">特に何も行動していない</span></label>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q5</div>
+        <div class="q-text">（Q4で「行動した」方へ）試してみて、何が足りないと感じましたか？<span class="q-optional">任意</span></div>
+      </div>
+      <textarea name="q5" placeholder="例：「続けられなかった」「自分に合っていなかった」「もっと具体的な対処法が欲しかった」など"></textarea>
+    </div>
+
+    <!-- BLOCK 3 -->
+    <div class="section-label">
+      <div class="section-num">3</div>
+      <div>
+        <div class="section-title">本当に欲しいものについて</div>
+        <div class="section-desc">このアンケートの核心です</div>
+      </div>
+    </div>
+
+    <!-- Q6 ★重要 -->
+    <div class="q-card highlight">
+      <div class="q-header">
+        <div class="q-num" style="color: var(--green);">Q6</div>
+        <div class="q-text">
+          もし「自分のADHD傾向に関すること」を魔法で一つだけ解決できるとしたら、何を解決したいですか？
+          <span class="q-required">必須</span>
+          <br><small style="font-weight:300; color:#999;">「全部」ではなく「一番」を一つだけ選んでください</small>
+        </div>
+      </div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q6" value="self_understanding" required><span class="option-text">自分がどんな特性を持っているか、正確に知りたい（自己理解）</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="solution"><span class="option-text">具体的に「何をすればいいか」を教えてほしい（対処法・行動指針）</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="community"><span class="option-text">同じ状況の人とつながって「自分だけじゃない」と感じたい（共感・仲間）</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="companion"><span class="option-text">日常の小さな困りごとを、その都度一緒に解決してくれる存在が欲しい（伴走）</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="expression"><span class="option-text">社会や周囲に、自分の特性をうまく説明できるようになりたい（表現・理解促進）</span></label>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q7</div>
+        <div class="q-text">Q6について、もう少し詳しく教えてもらえますか？（どんな場面で・なぜそれが欲しいか）<span class="q-optional">任意</span></div>
+      </div>
+      <textarea name="q7" placeholder="1〜2文で構いません。思ったままを書いてください"></textarea>
+    </div>
+
+    <!-- BLOCK 4 -->
+    <div class="section-label">
+      <div class="section-num">4</div>
+      <div>
+        <div class="section-title">サービスへの関心について</div>
+        <div class="section-desc">率直な感覚を教えてください</div>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q8</div>
+        <div class="q-text">
+          「自分の特性を理解して、日常の問題を一緒に解決してくれるAIサービス」が月1,000〜2,000円で使えるとしたら、どう思いますか？
+          <span class="q-required">必須</span>
+        </div>
+      </div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q8" value="yes_now" required><span class="option-text">ぜひ使いたい・すぐに使いたい</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="yes_maybe"><span class="option-text">興味はある・使ってみたいと思う</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="price_dependent"><span class="option-text">価格次第では使うかもしれない</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="not_interested"><span class="option-text">あまり興味はない</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="no"><span class="option-text">使わないと思う</span></label>
+      </div>
+      <div class="q-hint">現時点でこのサービスは存在しません。率直な感覚を教えてください。</div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q9</div>
+        <div class="q-text">Q8の理由を一言教えてもらえますか？<span class="q-optional">任意</span></div>
+      </div>
+      <textarea name="q9" placeholder="「高い」「必要ない」「こういう形なら使う」など、何でも"></textarea>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q10</div>
+        <div class="q-text">自分のADHD傾向・グレーゾーンについて、誰かに言いたかったけど言えなかったことがあれば、自由に書いてください。<span class="q-optional">任意</span></div>
+      </div>
+      <textarea name="q10" placeholder="どんな内容でも歓迎します" style="min-height:120px;"></textarea>
+    </div>
+
+    <!-- インタビュー誘導 -->
+    <div class="interview-box">
+      <h3>もう少し詳しく話してみませんか？</h3>
+      <p>30分のオンライン対話で、あなたの体験をもっと深く聞かせてください。セールスや勧誘は一切なく、あなたの声がそのまま参考になります。（完全任意・謝礼なし）</p>
+      <div class="interview-options">
+        <label class="interview-option" onclick="toggleContact('yes')">
+          <input type="radio" name="interview" value="yes"> はい、話してもいいです
+        </label>
+        <label class="interview-option">
+          <input type="radio" name="interview" value="maybe"> 検討中（後で考えます）
+        </label>
+        <label class="interview-option">
+          <input type="radio" name="interview" value="no"> 今回は遠慮します
+        </label>
+      </div>
+      <div class="contact-input-wrap" id="contactWrap">
+        <label>X（旧Twitter）アカウント名 または メールアドレス</label>
+        <input type="text" name="contact" placeholder="@your_account または your@email.com">
+      </div>
+    </div>
+
+    <!-- 送信 -->
+    <div class="submit-wrap">
+      <button type="submit" class="submit-btn">回答を送信する</button>
+      <div class="submit-note">送信後、このページにお礼のメッセージが表示されます</div>
+    </div>
+
+  </form>
+
+  <!-- サンクスページ -->
+  <div class="thanks" id="thanksPage">
+    <div class="thanks-icon">🙏</div>
+    <h2>ありがとうございました。</h2>
+    <p>あなたの声を受け取りました。<br>いただいた内容は、グレーゾーンにいる人たちのための仕組みづくりに、大切に活かします。<br><br>もしインタビューへの参加を希望された方には、数日以内にご連絡いたします。</p>
+  </div>
+
+</div>
+
+<footer>
+  このアンケートは事業仮説検証のために実施しています。回答内容は外部に公開しません。
+</footer>
+
+<script>
+  // インタビュー連絡先表示
+  function toggleContact(val) {
+    const wrap = document.getElementById('contactWrap');
+    if (val === 'yes') {
+      wrap.classList.add('visible');
+    }
+  }
+
+  document.querySelectorAll('input[name="interview"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const wrap = document.getElementById('contactWrap');
+      wrap.classList.toggle('visible', this.value === 'yes');
+    });
+  });
+
+  // 進捗バー
+  const requiredFields = ['q1','q3','q4','q6','q8'];
+  function updateProgress() {
+    let answered = 0;
+    requiredFields.forEach(name => {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      if (checked) answered++;
+    });
+    const pct = (answered / requiredFields.length) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `${answered} / ${requiredFields.length}`;
+  }
+
+  document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => {
+    el.addEventListener('change', updateProgress);
+  });
+
+  // フォーム送信（Formspree）
+  const form = document.getElementById('surveyForm');
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = form.querySelector('.submit-btn');
+    btn.textContent = '送信中...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        form.style.display = 'none';
+        document.getElementById('thanksPage').classList.add('visible');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        btn.textContent = '送信できませんでした。もう一度お試しください。';
+        btn.disabled = false;
+      }
+    } catch(err) {
+      btn.textContent = '通信エラーが発生しました。再度お試しください。';
+      btn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
